@@ -50,7 +50,7 @@ int main(int argc, char* argv[])
 	std::cout << "initializing";
 	auto mem = Memory("cs2.exe");
 	const auto client = mem.GetModuleAddress("client.dll");
-	uint16_t old = mem.Read<uint16_t>(client + 0x821CA8);
+	uint16_t old = mem.Read<uint16_t>(client + 0x821D88);
 	bool flag = false;
 	ShowWindow(GetConsoleWindow(), HIDE_WINDOW);
 	MessageBoxA(NULL, "F8 to toggle wallhack, insert to unhook", "important information", MB_OK);
@@ -61,13 +61,13 @@ int main(int argc, char* argv[])
 		}
 		if (GetAsyncKeyState(VK_F8) and flag == true) {
 			while (GetAsyncKeyState(VK_F8)) {
-				mem.Write<uint16_t>(client + 0x821CA8, 37008);
+				mem.Write<uint16_t>(client + 0x821D88, 37008);
 				flag = false;
 			}
 		}
 		else if (GetAsyncKeyState(VK_F8)) {
 			while (GetAsyncKeyState(VK_F8)) {
-				mem.Write<uint16_t>(client + 0x821CA8, old);
+				mem.Write<uint16_t>(client + 0x821D88, old);
 				flag = true;
 			}
 		}
