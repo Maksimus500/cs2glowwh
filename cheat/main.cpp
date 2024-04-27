@@ -4,11 +4,23 @@
 #include <cstdlib>
 #include <cstring>
 #include <clocale>
+#include <array>
 
-int m_iFOV = 0x210;
-int dwLocalPlayerPawn = 0x17361E8;
-int m_pCameraServices = 0x1138;
-int m_bIsScoped = 0x1400;
+constexpr std::ptrdiff_t m_hMyWeapons = 0x40;
+constexpr std::ptrdiff_t m_nFallbackPaintKit = 0x1548;
+constexpr std::ptrdiff_t m_nFallbackSeed = 0x154C; // int32
+constexpr std::ptrdiff_t m_flFallbackWear = 0x1550; // float32
+constexpr std::ptrdiff_t m_nFallbackStatTrak = 0x1554; // int32
+constexpr std::ptrdiff_t m_iItemDefinitionIndex = 0x1BA; // uint16
+constexpr std::ptrdiff_t m_iItemIDHigh = 0x1D0; // uint32
+constexpr std::ptrdiff_t m_iEntityQuality = 0x1BC; // int32
+constexpr std::ptrdiff_t m_iAccountID = 0x1D8; // uint32
+constexpr std::ptrdiff_t m_OriginalOwnerXuidLow = 0x1600; // uint32
+constexpr std::ptrdiff_t dwEntityList = 0x18C1EA8;
+constexpr std::ptrdiff_t m_iPlayerState = 0x1304; // CSPlayerState
+constexpr std::ptrdiff_t dwLocalPlayerPawn = 0x173A3C8;
+
+
 
 void openProcess(const char* path) {
 	char command[1024];
@@ -46,28 +58,30 @@ int main(int argc, char* argv[])
 
 	}
 
-	Sleep(10000);
 	std::cout << "initializing";
+	Sleep(10000);
 	auto mem = Memory("cs2.exe");
 	const auto client = mem.GetModuleAddress("client.dll");
-	uint16_t old = mem.Read<uint16_t>(client + 0x821D88);
+	uint16_t old = mem.Read<uint16_t>(client + 0x8263F2);
+	
+
+
 	bool flag = false;
-	ShowWindow(GetConsoleWindow(), HIDE_WINDOW);
+
 	MessageBoxA(NULL, "F8 to toggle wallhack, insert to unhook", "important information", MB_OK);
 	while (true) {
-		std::this_thread::sleep_for(std::chrono::milliseconds(50));
 		if (mem.UpdatePid() == 0) {
 			quick_exit(0);
 		}
 		if (GetAsyncKeyState(VK_F8) and flag == true) {
 			while (GetAsyncKeyState(VK_F8)) {
-				mem.Write<uint16_t>(client + 0x821D88, 37008);
+				mem.Write<uint16_t>(client + 0x8263F2, 37008);
 				flag = false;
 			}
 		}
 		else if (GetAsyncKeyState(VK_F8)) {
 			while (GetAsyncKeyState(VK_F8)) {
-				mem.Write<uint16_t>(client + 0x821D88, old);
+				mem.Write<uint16_t>(client + 0x8263F2, old);
 				flag = true;
 			}
 		}
