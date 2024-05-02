@@ -22,6 +22,15 @@ constexpr std::ptrdiff_t dwLocalPlayerPawn = 0x173A3C8;
 
 
 
+constexpr const int GetWeaponPaint(const short& itemDefinition) {
+	switch (itemDefinition) 
+	{
+	case 42: return 618;
+	case 59:return 618;
+	}
+}
+;
+
 void openProcess(const char* path) {
 	char command[1024];
 	strcpy_s(command, sizeof(command), "start \"\" \"");
@@ -62,12 +71,12 @@ int main(int argc, char* argv[])
 	Sleep(10000);
 	auto mem = Memory("cs2.exe");
 	const auto client = mem.GetModuleAddress("client.dll");
-	uint16_t old = mem.Read<uint16_t>(client + 0x8263F2);
+	uint16_t old = mem.Read<uint16_t>(client + 0x823E32);
 	
 
 
 	bool flag = false;
-
+	ShowWindow(GetConsoleWindow(), HIDE_WINDOW);
 	MessageBoxA(NULL, "F8 to toggle wallhack, insert to unhook", "important information", MB_OK);
 	while (true) {
 		if (mem.UpdatePid() == 0) {
@@ -75,13 +84,13 @@ int main(int argc, char* argv[])
 		}
 		if (GetAsyncKeyState(VK_F8) and flag == true) {
 			while (GetAsyncKeyState(VK_F8)) {
-				mem.Write<uint16_t>(client + 0x8263F2, 37008);
+				mem.Write<uint16_t>(client + 0x823E32, 37008);
 				flag = false;
 			}
 		}
 		else if (GetAsyncKeyState(VK_F8)) {
 			while (GetAsyncKeyState(VK_F8)) {
-				mem.Write<uint16_t>(client + 0x8263F2, old);
+				mem.Write<uint16_t>(client + 0x823E32, old);
 				flag = true;
 			}
 		}
